@@ -1,33 +1,33 @@
-# Lyft Challenge -- Identifying Cars and Drivable Roads in CARLA
-
+# Lyft Challenge - Identifying Cars and Drivable Roads in CARLA
 
 Overview
 ---
-This repository contains files for road segmentation pipeline in CARLA.
+I have recently participated in Lyft-Udacity Self-Driving Car challenge to identify drivable road and cars from the dashboard
+camera on pixel-pixel bases. The challenge lasted for one month and there were 155 participants. I finished 26th in the challenge with overal F-score = 90.14 and FPS=10.64 This repository contains description of data, pre-processing and architecures 
+I used for this challenge.
 
+To train neural network acrhitecure I used training data from CARLA simulator. 
 [CARLA](http://carla.readthedocs.io/en/latest/) is an open-source simulator for autonomous driving developed by Intel Labs 
 and the Computer Vision Center. The simulator includes a virtual world with realistic looking roads, buildings and trees, 
-but also dynamic objects like cars and pedestrians. CARLA allows to produce labels for semantic segmenatation, depth 
-segmenatation and LiDAR data. In this project using segmented camera image from CARLA I used deep learning to identify 
-drivable road and cars. The challenge run for one month and 155 participants submitted their results. I finished 26th in the 
-challenge with overal F-score=90.14 and FPS=10.64 
+but also dynamic objects like cars and pedestrians. It allows to select 13 various weather conditions which include dry, sunny
+rainy and wet roads. Simulation of shadows and surface reflections cretes realistic scenes. 
+CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. 
 
 In this project, I used transfer learning to extract features from the image, and applied Upsamples+Convolution layers 
 to segment image to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
-and predictions. Repository contains following files to train, run and perform inference of segmentation.  
+and predictions. Files used to train, run and predict segmentation are explained below.  
 
 To meet specifications, the project will require submitting five files: 
-* main_segment_image.py (main script to run trianing, inference and plotting)
+* main_segment_pipeline.py (main script for trianing, inference and plotting)
 * helper_to_model.py (script used to create a model)
 * helper_to_train.py (script used to train model and define learning rate, algorithm, batch size etc.)
-* drive.py (script to drive the car - feel free to modify this file)
-* model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
-* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
+* helper_prepare_data.py (script to preprocess data, create labels and generate batchs)
+* model.pb (a frozen Keras model)
+* test_video.mp4 (hidden video that determined ranking)
 
 This README file describes how to output the video in the "Details About Files In This Directory" section.
 
-Creating a Great Writeup
+Pre-Processing 
 ---
 A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
 
@@ -35,13 +35,31 @@ All that said, please be concise!  We're not looking for you to write a book her
 
 You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
 
-The Project
+Data Augmentation
 ---
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior 
 * Design, train and validate a model that predicts a steering angle from image data
 * Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
 * Summarize the results with a written report
+
+Model Description
+---
+
+Training 
+---
+For training step I used 10 epochs with 4-6 batchs (depending on the avaibility of recources). 
+* Loss function: Initially, I trianed model using only categorical-cross_entropy. The loss converged pretty fast, however, individual segmentation of vehicles was poor. Adding tverskiy-loss has improved segmentation of both vehicles and roads. 
+Tverky-loss is similar to dice index with additional parameters to weight FPs or FNs. I gave more weight on FNs to avoid 
+missing vehicles. 
+* Optimizer: I used RMSProp optimizer with initial learning_rate 0.0001, with exponetial moving average factor of 0.95. 
+I added callback to reduce learning rate after by a factor 0.1 after 3 epochs, if no improvement observed in validation loss. 
+* Saving Model: Using keras.callbacks library I saved intermediate weitghs which produced least validation loss. 
+
+
+Inference
+---
+
 
 ### Dependencies
 This lab requires:
