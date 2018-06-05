@@ -1,4 +1,5 @@
-# Identifying Cars and Drivable Roads in CARLA
+# Lyft Challenge -- Identifying Cars and Drivable Roads in CARLA
+
 
 Overview
 ---
@@ -7,20 +8,18 @@ This repository contains files for road segmentation pipeline in CARLA.
 [CARLA](http://carla.readthedocs.io/en/latest/) is an open-source simulator for autonomous driving developed by Intel Labs 
 and the Computer Vision Center. The simulator includes a virtual world with realistic looking roads, buildings and trees, 
 but also dynamic objects like cars and pedestrians. CARLA allows to produce labels for semantic segmenatation, depth 
-segmenatation and LiDAR data. In this project using labeled data from CARLA I train deep neural netowrks and convolutional
-neural networks to identify objects in camera images. The main focus of this project is to develop pixel-wise identification
-of cars and the drivable area of the road.  
+segmenatation and LiDAR data. In this project using segmented camera image from CARLA I used deep learning to identify 
+drivable road and cars. The challenge run for one month and 155 participants submitted their results. I finished 26th in the 
+challenge with overal F-score=90.14 and FPS=10.64 
 
-Edit .....
-
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
-
-We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
-
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
+In this project, I used transfer learning to extract features from the image, and applied Upsamples+Convolution layers 
+to segment image to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
+and predictions. Repository contains following files to train, run and perform inference of segmentation.  
 
 To meet specifications, the project will require submitting five files: 
-* model.py (script used to create and train the model)
+* main_segment_image.py (main script to run trianing, inference and plotting)
+* helper_to_model.py (script used to create a model)
+* helper_to_train.py (script used to train model and define learning rate, algorithm, batch size etc.)
 * drive.py (script to drive the car - feel free to modify this file)
 * model.h5 (a trained Keras model)
 * a report writeup file (either markdown or pdf)
