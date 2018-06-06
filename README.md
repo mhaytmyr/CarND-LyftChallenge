@@ -2,8 +2,8 @@
 
 [//]: # (Image References)
 
-[image1]: ./examples/Snapshot_1.png "Example 1"
-[image2]: ./examples/Snapshot_5.png "Example 2"
+[image1]: ./examples/Snapshot_8.png "Example 1"
+[image2]: ./examples/Snapshot_9.png "Example 2"
 [image3]: ./examples/Snapshot_6.png "Example 3"
 [image4]: ./examples/Snapshot_7.png "Example 4"
 [image6]: ./examples/placeholder_small.png "Normal Image"
