@@ -23,6 +23,12 @@ rainy and wet roads. Simulation of shadows and surface reflections cretes realis
 CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. Following images are some
 examples from simulator with labels. 
 
+<p float="left">
+  <img src="./examples/Snapshot_7.png" width="100" />
+  <img src="./examples/Snapshot_6.png" width="100" /> 
+</p>
+
+
 ![alt text][image1] ![alt text][image2]
 ![alt text][image3] ![alt text][image4]
 
