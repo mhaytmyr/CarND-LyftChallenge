@@ -23,12 +23,8 @@ rainy and wet roads. Simulation of shadows and surface reflections cretes realis
 CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. Following images are some
 examples from simulator with labels. 
 
-<img src="./examples/Snapshot_6.png" width="400" /> <img src="./examples/Snapshot_7.png" width="400" /> 
+<img src="./examples/Snapshot_6.png" width="400" /> <img src="./examples/Snapshot_2.png" width="400" /> 
 <img src="./examples/Snapshot_8.png" width="400" /> <img src="./examples/Snapshot_9.png" width="400" /> 
-
-
-![alt text][image1] ![alt text][image2]
-![alt text][image3] ![alt text][image4]
 
 In this project, I used transfer learning to extract features from the image, and applied Upsamples+Convolution layers 
 to segment image to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
