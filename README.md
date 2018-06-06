@@ -26,8 +26,8 @@ examples from simulator with labels.
 <img src="./examples/Snapshot_6.png" width="425" /> <img src="./examples/Snapshot_2.png" width="425" /> 
 <img src="./examples/Snapshot_8.png" width="425" /> <img src="./examples/Snapshot_9.png" width="425" /> 
 
-In this project, I used transfer learning to extract features with ResNet50, and applied Upsamples+Convolution layers 
-to classify pixesl to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
+In this project, I used transfer learning to extract features with ResNet50, and applied Upsample+Convolution layers 
+to classify pixels to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
 and predictions. 
 
 Files used to train, run and predict segmentation are explained below.   
@@ -42,17 +42,17 @@ This README file describes how to output the video in the "Details About Files I
 
 Pre-Processing 
 ---
-* Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after pre-processing. 
+* Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after pre-processing. Pre-processed image dimentions are (400,800,3). 
 * Normalization: For each color channel I used standard normalization to scale intensity by 255 and subtract 0.5
 
 <img src="./examples/PreProcess_1.png" width="425" /> <img src="./examples/PreProcess_2.png" width="425" /> 
-<img src="./examples/PreProcess_5.png" width="425" /> <img src="./examples/PreProcess_6.png" width="425" /> 
+<img src="./examples/PreProcess_7.png" width="425" /> <img src="./examples/PreProcess_6.png" width="425" /> 
 
 Data 
 ---
 I have collected around 5k images including images shared by particiapants and ones I generated using CARLA. 
 To augment images I used random flipping, changing of contrast, random shifting (left 50, down 50), 
-rotation (-15,+15 degrees) and zoom. Data suffered class imbalance only ~5% and ~25% pixels contained vehicles and roads 
+rotation (-15,+15 degrees) and zoom. Data suffered class imbalance only ~5% and ~30% pixels contained vehicles and roads 
 from the scene. Moreover, images are sequnetial and using small batches could result fast convergence with high bias.  
 To address this issues, I have tried to shuffle data as much as possible, which would break asymmetry in sequences. 
 To address imbalance I have collected more data using simulator with increased number of vehicles. I have also tried created
@@ -60,6 +60,12 @@ custom loss function to avoid "fake" low-loss.
 
 Model Description
 ---
+To extract features I used ResNet50 pre-trained model. ResNet50 contains 50 stack of 1x1+3x3+1x1 Convolution layers with 
+additional skip connections. I keep track of each downsampling layer before bottle-neck layer. Then I upsample bottle-neck
+layer and concatenate it with corresponding downsampled featires from base model. Each upsampling layer consist of 
+3x3 Conv + BN + LeakyReLU + Concat(downSample, upSample) + BN + LeakyReLU + Conv + BN + LeakyReLU. Training on (400,800) image takes long and eachived only several FPS. To increase speed, I reshaped images to (256,256) shape. For the last two 
+upsampling shapes I used (100,200), (200,400) and (400,800) output shapes. This helped to restore original resoltution of 
+image.
 
 Training 
 ---
