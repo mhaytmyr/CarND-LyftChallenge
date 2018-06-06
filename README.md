@@ -1,4 +1,13 @@
-# Lyft Challenge - Identifying Cars and Drivable Roads in CARLA
+# **Lyft Challenge - Identifying Vehicles and Drivable Road in CARLA (In Progress...)**
+
+[//]: # (Image References)
+
+[image1]: ./examples/Snapshot_1.png "Example 1"
+[image2]: ./examples/Snapshot_5.png "Example 2"
+[image3]: ./examples/Snapshot_6.png "Example 3"
+[image4]: ./examples/Snapshot_7.png "Example 4"
+[image6]: ./examples/placeholder_small.png "Normal Image"
+[image7]: ./examples/placeholder_small.png "Flipped Image"
 
 Overview
 ---
@@ -6,18 +15,23 @@ I have recently participated in Lyft-Udacity Self-Driving Car challenge to ident
 camera on pixel-pixel bases. The challenge lasted for one month and there were 155 participants. I finished 26th in the challenge with overal F-score = 90.14 and FPS=10.64 This repository contains description of data, pre-processing and architecures 
 I used for this challenge.
 
-To train neural network acrhitecure I used training data from CARLA simulator. 
+To train neural network acrhitecure using data from CARLA simulator. 
 [CARLA](http://carla.readthedocs.io/en/latest/) is an open-source simulator for autonomous driving developed by Intel Labs 
 and the Computer Vision Center. The simulator includes a virtual world with realistic looking roads, buildings and trees, 
 but also dynamic objects like cars and pedestrians. It allows to select 13 various weather conditions which include dry, sunny
 rainy and wet roads. Simulation of shadows and surface reflections cretes realistic scenes. 
-CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. 
+CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. Following images are some
+examples from simulator with labels. 
+
+![alt text][image1]
+![alt text][image2]
+![alt text][image3]
+![alt text][image4]
 
 In this project, I used transfer learning to extract features from the image, and applied Upsamples+Convolution layers 
 to segment image to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
 and predictions. Files used to train, run and predict segmentation are explained below.  
-
-To meet specifications, the project will require submitting five files: 
+ 
 * main_segment_pipeline.py (main script for trianing, inference and plotting)
 * helper_to_model.py (script used to create a model)
 * helper_to_train.py (script used to train model and define learning rate, algorithm, batch size etc.)
@@ -29,13 +43,11 @@ This README file describes how to output the video in the "Details About Files I
 
 Pre-Processing 
 ---
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
+* Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after pre-processing. 
+* Normalization: For each color channel I used standard normalization to scale intensity by 255 and subtract 0.5
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
-Data Augmentation
+Data 
 ---
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior 
