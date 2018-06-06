@@ -23,13 +23,14 @@ rainy and wet roads. Simulation of shadows and surface reflections cretes realis
 CARLA allows to produce labels for semantic segmenatation, depth segmenatation and LiDAR data. Following images are some
 examples from simulator with labels. 
 
-<img src="./examples/Snapshot_6.png" width="400" /> <img src="./examples/Snapshot_2.png" width="400" /> 
-<img src="./examples/Snapshot_8.png" width="400" /> <img src="./examples/Snapshot_9.png" width="400" /> 
+<img src="./examples/Snapshot_6.png" width="425" /> <img src="./examples/Snapshot_2.png" width="425" /> 
+<img src="./examples/Snapshot_8.png" width="425" /> <img src="./examples/Snapshot_9.png" width="425" /> 
 
-In this project, I used transfer learning to extract features from the image, and applied Upsamples+Convolution layers 
-to segment image to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
-and predictions. Files used to train, run and predict segmentation are explained below.  
- 
+In this project, I used transfer learning to extract features with ResNet50, and applied Upsamples+Convolution layers 
+to classify pixesl to three classes (Road, Vehicle and Others). This repository contains detailed explanation of the model
+and predictions. 
+
+Files used to train, run and predict segmentation are explained below.   
 * main_segment_pipeline.py (main script for trianing, inference and plotting)
 * helper_to_model.py (script used to create a model)
 * helper_to_train.py (script used to train model and define learning rate, algorithm, batch size etc.)
@@ -44,14 +45,18 @@ Pre-Processing
 * Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after pre-processing. 
 * Normalization: For each color channel I used standard normalization to scale intensity by 255 and subtract 0.5
 
+<img src="./examples/PreProcess_1.png" width="425" /> <img src="./examples/PreProcess_2.png" width="425" /> 
+<img src="./examples/PreProcess_5.png" width="425" /> <img src="./examples/PreProcess_6.png" width="425" /> 
 
 Data 
 ---
-The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior 
-* Design, train and validate a model that predicts a steering angle from image data
-* Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
-* Summarize the results with a written report
+I have collected around 5k images including images shared by particiapants and ones I generated using CARLA. 
+To augment images I used random flipping, changing of contrast, random shifting (left 50, down 50), 
+rotation (-15,+15 degrees) and zoom. Data suffered class imbalance only ~5% and ~25% pixels contained vehicles and roads 
+from the scene. Moreover, images are sequnetial and using small batches could result fast convergence with high bias.  
+To address this issues, I have tried to shuffle data as much as possible, which would break asymmetry in sequences. 
+To address imbalance I have collected more data using simulator with increased number of vehicles. I have also tried created
+custom loss function to avoid "fake" low-loss. 
 
 Model Description
 ---
