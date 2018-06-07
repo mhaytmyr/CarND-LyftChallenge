@@ -12,8 +12,9 @@
 Overview
 ---
 I have recently participated in Lyft-Udacity Self-Driving Car challenge to identify drivable road and cars from the dashboard
-camera on pixel-pixel bases. The challenge lasted for one month and there were 155 participants. I finished 26th in the challenge with overal F-score = 90.14 and FPS=10.64 This repository contains description of data, pre-processing and architecures 
-I used for this challenge.
+camera on pixel-pixel bases. The challenge lasted for one month and there were 155 participants. I finished *26th* in the 
+challenge with overal **F-score = 90.14 and FPS=10.64** This repository contains description of data, pre-processing and 
+architecures I used for this challenge.
 
 To train neural network acrhitecure using data from CARLA simulator. 
 [CARLA](http://carla.readthedocs.io/en/latest/) is an open-source simulator for autonomous driving developed by Intel Labs 
@@ -42,34 +43,47 @@ This README file describes how to output the video in the "Details About Files I
 
 Pre-Processing 
 ---
-* Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after pre-processing. Pre-processed image dimentions are (400,800,3). 
-* Normalization: For each color channel I used standard normalization to scale intensity by 255 and subtract 0.5
+* Trimming data: I trimmed images to exclude hood of the car and sky. Original labels contain 13 classes, for this challenge 
+the goal is to identify road and vehicles on pixel-by-pixel bases. Following images demonstrate several examples after 
+pre-processing. Pre-processed image dimentions are (400,800,3). 
+* Normalization: For each color channel I used standard normalization, each pixel intensity is scale intensity by 255 
+and shifted 0.5
 
 <img src="./examples/PreProcess_1.png" width="425" /> <img src="./examples/PreProcess_2.png" width="425" /> 
 <img src="./examples/PreProcess_7.png" width="425" /> <img src="./examples/PreProcess_6.png" width="425" /> 
 
 Data 
 ---
-I have collected around 5k images including images shared by particiapants and ones I generated using CARLA. 
-To augment images I used random flipping, changing of contrast, random shifting (left 50, down 50), 
-rotation (-15,+15 degrees) and zoom. Data suffered class imbalance only ~5% and ~30% pixels contained vehicles and roads 
+I have collected around 5k images including images shared by particiapants and the ones I generated using CARLA. 
+Additionally, I augmented data set by randomly flipping, changing the contrast, randomly shifting (left 50, down 50), 
+rotating (-15,+15 degrees) and zooming. Images are highly imbalanced, only ~5% and ~30% pixels contained vehicles and roads 
 from the scene. Moreover, images are sequnetial and using small batches could result fast convergence with high bias.  
-To address this issues, I have tried to shuffle data as much as possible, which would break asymmetry in sequences. 
+To address this issues, I shuffled dataset, which would break asymmetry in sequences. 
 To address imbalance I have collected more data using simulator with increased number of vehicles. I have also tried created
-custom loss function to avoid "fake" low-loss. 
+custom loss function to avoid "fake" high-score. 
 
 Model Description
 ---
 To extract features I used ResNet50 pre-trained model. ResNet50 contains 50 stack of 1x1+3x3+1x1 Convolution layers with 
 additional skip connections. I keep track of each downsampling layer before bottle-neck layer. Then I upsample bottle-neck
-layer and concatenate it with corresponding downsampled featires from base model. Each upsampling layer consist of 
-3x3 Conv + BN + LeakyReLU + Concat(downSample, upSample) + BN + LeakyReLU + Conv + BN + LeakyReLU. Training on (400,800) image takes long and eachived only several FPS. To increase speed, I reshaped images to (256,256) shape. For the last two 
-upsampling shapes I used (100,200), (200,400) and (400,800) output shapes. This helped to restore original resoltution of 
-image.
+layer and concatenate it with corresponding downsampled layer from base model (helper_to_models.py). 
+Each upsampling step consists of 3x3 Conv + BN + LeakyReLU + Concat(downSample, upSample) + BN + LeakyReLU + Conv + BN + LeakyReLU layers. Training on (400,800) input image runs slow and acheived only several FPS. Challenge required that minimum FPS 
+is greater than 10 FPS. To increase speed, I resized images to (256,256) dimensions. For the last two 
+upsampling shapes I used (100,200), (200,400) and (400,800) output shapes. This helped to restore original resolution of the 
+image. For resizing I wrote custom keras Layer using TensorFlow biliniar upsampling method. 
+
+| Layer Name    |Output Shape |Number of Parameters|Trainable|
+| ------------- |:-----------:|:------------------:|:-------:|
+| Input_1       | (400,800,3) | 0                  | False   |
+| Resize        | (256,256,3) | 0                  | False   |
+| ResNet50      | (12,25,512) | 24M                | False   |
+
 
 Training 
 ---
-For training step I used 10 epochs with 4-6 batchs (depending on the avaibility of recources). 
+I trained net architecture for 10 epochs with 4-6 batchs (depending on the avaibility of recources). 
+I used custom built desktop with GeForce GTX 1060 6GB Nvidia graphics card to train the model. 
+Based on the batch size and input image size, 10 epochs lasted from 1.5 hr to 2.5 hr.    
 * Loss function: Initially, I trianed model using only categorical-cross_entropy. The loss converged pretty fast, however, individual segmentation of vehicles was poor. Adding tverskiy-loss has improved segmentation of both vehicles and roads. 
 Tverky-loss is similar to dice index with additional parameters to weight FPs or FNs. I gave more weight on FNs to avoid 
 missing vehicles. 
