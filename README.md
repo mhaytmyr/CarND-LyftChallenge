@@ -115,8 +115,10 @@ Inference
 ---
 For faster inference I convert keras model tensorflow .pb file. It runs 10 FPS. 
 Following links are predictions of the model. 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/lwoHJpcJ2zo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_KxLwL1LaRI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+[![Alt text](https://i.ytimg.com/vi/lwoHJpcJ2zo/1.jpg?time=1528475957230)](https://www.youtube.com/embed/lwoHJpcJ2zo)
+[![Alt text](https://i.ytimg.com/vi/_KxLwL1LaRI/2.jpg?time=1528476028365)](https://www.youtube.com/embed/_KxLwL1LaRI)
+
 
 Things I would do
 ---
