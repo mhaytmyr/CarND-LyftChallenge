@@ -129,7 +129,6 @@ resolution of images increases overall score with cost to FPS. It would be nice 
 
 ## Details About Files In This Directory
 
-### `main_segment_pipeline.py`
 
 You can run `main_segment_pipeline.py` with three arguments 'train|test|plot'. 
 * Train will train new model if model doesn't exist otherwise it will train existing model. 
