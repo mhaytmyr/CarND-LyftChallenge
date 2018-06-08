@@ -95,8 +95,8 @@ image. For resizing I wrote custom keras Layer using TensorFlow biliniar upsampl
 
 |  |Total Parameters | 
 |--|-----------------|
-|Non-trainable | 32M|
-|Trainable | 8M | 
+|Non-trainable | ~32M|
+|Trainable | ~9M | 
 
 Training 
 ---
@@ -113,14 +113,19 @@ I added callback to reduce learning rate after by a factor 0.1 after 3 epochs, i
 
 Inference
 ---
+For faster inference I convert keras model tensorflow .pb file. It runs 10 FPS. 
+Following links are predictions of the model. 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lwoHJpcJ2zo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_KxLwL1LaRI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
+Things I would do
+---
+Later after the contest I learning participants trained on large amount of data (~40k images). I would definetly use more data.
+I did not try other pretrained models such as MobileNet and VGG16, which would be good to compare. I realized improving 
+resolution of images increases overall score with cost to FPS. It would be nice to fine-tune input shape of image.  
 
 ### Dependencies
 This lab requires:
-
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
-
-The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
 
 The following resources can be found in this github repository:
 * drive.py
