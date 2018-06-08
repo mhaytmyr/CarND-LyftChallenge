@@ -67,17 +67,36 @@ Model Description
 To extract features I used ResNet50 pre-trained model. ResNet50 contains 50 stack of 1x1+3x3+1x1 Convolution layers with 
 additional skip connections. I keep track of each downsampling layer before bottle-neck layer. Then I upsample bottle-neck
 layer and concatenate it with corresponding downsampled layer from base model (helper_to_models.py). 
-Each upsampling step consists of 3x3 Conv + BN + LeakyReLU + Concat(downSample, upSample) + BN + LeakyReLU + Conv + BN + LeakyReLU layers. Training on (400,800) input image runs slow and acheived only several FPS. Challenge required that minimum FPS 
+Each upsampling step consists of 3x3 Conv/BN/LeakyReLU/Concat(downSample, upSample)/BN/LeakyReLU/Conv/BN/LeakyReLU layers. 
+Training on (400,800) input image was slow and acheived only several FPS. Challenge required that minimum FPS 
 is greater than 10 FPS. To increase speed, I resized images to (256,256) dimensions. For the last two 
 upsampling shapes I used (100,200), (200,400) and (400,800) output shapes. This helped to restore original resolution of the 
 image. For resizing I wrote custom keras Layer using TensorFlow biliniar upsampling method. 
 
-| Layer Name    |Output Shape |Number of Parameters|Trainable|
-| ------------- |:-----------:|:------------------:|:-------:|
-| Input_1       | (400,800,3) | 0                  | False   |
-| Resize        | (256,256,3) | 0                  | False   |
-| ResNet50      | (12,25,512) | 24M                | False   |
+| Layer Name    |Output Shape |Number of Parameters| Connected to |Trainable|
+| ------------- |:-----------:|:------------------:|:------------:|:-------:|
+| Input_1       | (400,800,3) | 0                  |None          | False   |
+| Resize        | (256,256,3) | 0                  |Input_1       | False   |
+| ResNet_downsample1 | (128,128,64) | ~9.7K         |Input_1       | False   |
+| ResNet_downsample2 | (63,63,256) | ~200K         |ResNet_downsample1 | False   |
+| ResNet_downsample3 | (32,32,512) | ~1.2M         |ResNet_downsample2 | False   |
+| ResNet_downsample4 | (16,16,1024) | ~7.1M        |ResNet_downsample3 | False   |
+| ResNet_downsample5 | (8,8,2048) | ~15M           |ResNet_downsample4 | False   |
+| BottleNeck1 | (8,8,1024) | ~2.1M           |ResNet_downsample5 | True   |
+| BottleNeck2 | (8,8,512) | ~500K           |BottleNeck1 | True   |
+| Upsampling1 | (16,16,256) | ~4.7M           |[BottleNeck1,ResNet_downsample4] | True   |
+| Upsampling2 | (32,32,128) | ~1.2M           |[Upsampling1,ResNet_downsample3] | True   |
+| Upsampling3 | (63,63,64) | ~300K           |[Upsampling2,ResNet_downsample2] | True   |
+| Upsampling4 | (128,128,32) | ~37K           |[Upsampling3,ResNet_downsample1] | True   |
+| Upsampling5 | (200,400,24) | ~18K           |[Upsampling4,Resize] | True   |
+| Upsampling6 | (400,800,12) | ~5.6K           |[Upsampling5,Input_1] | True   |
+| SoftMax | (400,800,3) | 39           |Upsampling6 | True   |
 
+
+|  |Total Parameters | 
+|--|-----------------|
+|Non-trainable | 32M|
+|Trainable | 8M | 
 
 Training 
 ---
