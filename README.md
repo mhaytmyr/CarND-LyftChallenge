@@ -127,21 +127,15 @@ Later after the contest I learning participants trained on large amount of data 
 I did not try other pretrained models such as MobileNet and VGG16, which would be good to compare. I realized improving 
 resolution of images increases overall score with cost to FPS. It would be nice to fine-tune input shape of image.  
 
-### Dependencies
-This lab requires:
-
-The following resources can be found in this github repository:
-* drive.py
-* video.py
-* writeup_template.md
-
-The simulator can be downloaded from the classroom. In the classroom, we have also provided sample data that you can optionally use to help train your model.
-
 ## Details About Files In This Directory
 
-### `drive.py`
+### `main_segment_pipeline.py`
 
-Usage of `drive.py` requires you have saved the trained model as an h5 file, i.e. `model.h5`. See the [Keras documentation](https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model) for how to create this file using the following command:
+You can run `main_segment_pipeline.py` with three arguments 'train|test|plot'. 
+* Train will train new model if model doesn't exist otherwise it will train existing model. 
+* Test outputs prediction for validation test data. For debuggin purposes. 
+* Plot prints labels and images after pre-processing. 
+
 ```sh
 model.save(filepath)
 ```
