@@ -1,4 +1,4 @@
-# **Lyft Challenge - Identifying Vehicles and Drivable Road in CARLA (In Progress...)**
+# **Lyft Challenge - Identifying Vehicles and Drivable Road in CARLA**
 
 [//]: # (Image References)
 
@@ -136,70 +136,29 @@ You can run `main_segment_pipeline.py` with three arguments 'train|test|plot'.
 * Test outputs prediction for validation test data. For debuggin purposes. 
 * Plot prints labels and images after pre-processing. 
 
-```sh
-model.save(filepath)
-```
-
-Once the model has been saved, it can be used with drive.py using this command:
+You can change the model parameters in `helper_to_model.py` file. Beore training, it is possible to adjust 
+training algorihm hyper-parameters in `helper_to_train.py`. Once you are ready to train run following command 
 
 ```sh
-python drive.py model.h5
+python3 main_segment_pipeline.py "train"
 ```
-
-The above command will load the trained model and use the model to make predictions on individual images in real-time and send the predicted angle back to the server via a websocket connection.
-
-Note: There is known local system's setting issue with replacing "," with "." when using drive.py. When this happens it can make predicted steering values clipped to max/min values. If this occurs, a known fix for this is to add "export LANG=en_US.utf8" to the bashrc file.
-
-#### Saving a video of the autonomous agent
+New model name will be saved in './chekcpoint/' directory with a model name provided in `config.py` file. 
+You experiment with different image input shapes, batchSize and other filters in  `config.py` file. 
+Once the model has been trained, it can be used to display prediction frames using this command:
 
 ```sh
-python drive.py model.h5 run1
+python3 main_segment_pipeline.py "test"
 ```
 
-The fourth argument, `run1`, is the directory in which to save the images seen by the agent. If the directory already exists, it'll be overwritten.
+The above command will load the trained model and use the model to make predictions on individual images in real-time. 
+Using arrow keys user can display frames individually. 
+
+#### Saving a video of the prediction video
 
 ```sh
-ls run1
-
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_424.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_451.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_477.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_528.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_573.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_618.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_697.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_723.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_749.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_817.jpg
-...
+python3 predict_video.py "your_input_video.mp4"
 ```
 
-The image file name is a timestamp of when the image was seen. This information is used by `video.py` to create a chronological video of the agent driving.
+This command will output original video frame ovelayed with vehicle/road predictions. 
 
-### `video.py`
-
-```sh
-python video.py run1
-```
-
-Creates a video based on images found in the `run1` directory. The name of the video will be the name of the directory followed by `'.mp4'`, so, in this case the video will be `run1.mp4`.
-
-Optionally, one can specify the FPS (frames per second) of the video:
-
-```sh
-python video.py run1 --fps 48
-```
-
-Will run the video at 48 FPS. The default FPS is 60.
-
-#### Why create a video
-
-1. It's been noted the simulator might perform differently based on the hardware. So if your model drives succesfully on your machine it might not on another machine (your reviewer). Saving a video is a solid backup in case this happens.
-2. You could slightly alter the code in `drive.py` and/or `video.py` to create a video of what your model sees after the image is processed (may be helpful for debugging).
-
-### Tips
-- Please keep in mind that training images are loaded in BGR colorspace using cv2 while drive.py load images in RGB to predict the steering angles.
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
 
