@@ -116,13 +116,9 @@ Inference
 For faster inference I convert keras model tensorflow .pb file. It runs 10 FPS. 
 Following links are predictions of the model. 
 
-<img src="https://i.ytimg.com/vi/lwoHJpcJ2zo/1.jpg?time=1528475957230i" width="425" href="https://www.youtube.com/embed/lwoHJpcJ2zo" />
 
-<img src="https://i.ytimg.com/vi/_KxLwL1LaRI/2.jpg?time=1528476028365" width="425" href="https://www.youtube.com/embed/_KxLwL1LaRI" />
-
-
-[![Alt text](https://i.ytimg.com/vi/lwoHJpcJ2zo/1.jpg?time=1528475957230i | width=256)](https://www.youtube.com/embed/lwoHJpcJ2zo)
-[![Alt text](https://i.ytimg.com/vi/_KxLwL1LaRI/2.jpg?time=1528476028365 | width=256)](https://www.youtube.com/embed/_KxLwL1LaRI)
+[![Alt text](https://i.ytimg.com/vi/lwoHJpcJ2zo/1.jpg?time=1528475957230i&s=256)](https://www.youtube.com/embed/lwoHJpcJ2zo)
+[![Alt text](https://i.ytimg.com/vi/_KxLwL1LaRI/2.jpg?time=1528476028365&s=256)](https://www.youtube.com/embed/_KxLwL1LaRI)
 
 
 Things I would do
